@@ -53,6 +53,15 @@ run_step() {
 
 EXIT_CODE=0
 
+HARNESS_BASE_FILES=(
+  AGENTS.md
+  ARCHITECTURE.md
+  init.sh
+  .agents/harness/feature_list.json
+  .agents/harness/feature_list.schema.json
+  .agents/harness/progress/PROGRESS.md
+)
+
 echo "── 1. Verificando entorno ─────────────────────────────"
 
 # uv disponible
@@ -97,14 +106,18 @@ ok "Versión de Python compatible"
 echo ""
 echo "── 2. Verificando archivos base del arnés ──────────────"
 
-for f in AGENTS.md ARCHITECTURE.md init.sh .agents/harness/feature_list.json .agents/harness/feature_list.schema.json .agents/harness/progress/PROGRESS.md; do
+MISSING_BASE_FILES=0
+for f in "${HARNESS_BASE_FILES[@]}"; do
   if [ ! -f "$f" ]; then
     fail "Falta archivo base: $f"
     EXIT_CODE=1
-  else
-    ok "Existe $f"
+    MISSING_BASE_FILES=1
   fi
 done
+
+if [ "$MISSING_BASE_FILES" -eq 0 ]; then
+  ok "Todos los archivos base del arnés existen; podemos continuar."
+fi
 
 echo ""
 echo "── 3. Validando feature_list.json ──────────────────────"
