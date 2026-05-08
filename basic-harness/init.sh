@@ -62,6 +62,11 @@ HARNESS_BASE_FILES=(
   .agents/harness/progress/PROGRESS.md
 )
 
+# El path '.' puede ajustarse según cada proyecto, porque cada proyecto es distinto.
+FORMAT_CMD=(uv run black --preview --unstable .)
+LINT_CMD=(uv run ruff check --output-format grouped .)
+TYPECHECK_CMD=(uv run pyrefly check --output-format min-text)
+
 echo "── 1. Verificando entorno ─────────────────────────────"
 
 # uv disponible
@@ -183,7 +188,61 @@ PY
 if [ $? -ne 0 ]; then EXIT_CODE=1; fi
 
 echo ""
-echo "── 4. Ejecutando tests ─────────────────────────────────"
+echo "── 4. Formateando código ───────────────────────────────"
+
+FORMAT_OUTPUT_FILE=$(mktemp)
+FORMAT_CHANGED_FILE=$(mktemp)
+
+"${FORMAT_CMD[@]}" 2>&1 | tee "$FORMAT_OUTPUT_FILE"
+FORMAT_STATUS=${PIPESTATUS[0]}
+
+if [ "$FORMAT_STATUS" -eq 0 ]; then
+  while IFS= read -r line; do
+    case "$line" in
+      reformatted\ *)
+        printf '%s\n' "${line#reformatted }" >>"$FORMAT_CHANGED_FILE"
+        ;;
+    esac
+  done <"$FORMAT_OUTPUT_FILE"
+
+  if [ -s "$FORMAT_CHANGED_FILE" ]; then
+    ok "Formateo aplicado correctamente"
+    warn "Black modificó archivos:"
+    while IFS= read -r formatted_file; do
+      warn "- $formatted_file"
+    done <"$FORMAT_CHANGED_FILE"
+  else
+    ok "Formateo aplicado; no hubo cambios."
+  fi
+else
+  fail "Formateo con Black falló"
+  EXIT_CODE=1
+fi
+
+rm -f "$FORMAT_OUTPUT_FILE" "$FORMAT_CHANGED_FILE"
+
+echo ""
+echo "── 5. Ejecutando linting ───────────────────────────────"
+
+if run_step "Linting falló" "${LINT_CMD[@]}"; then
+  ok "Linting completado sin errores"
+else
+  fail "Linting falló"
+  EXIT_CODE=1
+fi
+
+echo ""
+echo "── 6. Ejecutando type checking ─────────────────────────"
+
+if run_step "Type checking falló" "${TYPECHECK_CMD[@]}"; then
+  ok "Type checking completado sin errores"
+else
+  fail "Type checking falló"
+  EXIT_CODE=1
+fi
+
+echo ""
+echo "── 7. Ejecutando tests ─────────────────────────────────"
 
 if [ -d "tests" ]; then
   if [ "$VERBOSE" -eq 1 ]; then
@@ -203,7 +262,7 @@ else
 fi
 
 echo ""
-echo "── 5. Resumen ──────────────────────────────────────────"
+echo "── 8. Resumen ──────────────────────────────────────────"
 
 if [ $EXIT_CODE -eq 0 ]; then
   ok "Entorno listo. Puedes empezar a trabajar."
