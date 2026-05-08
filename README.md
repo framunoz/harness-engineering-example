@@ -4,16 +4,21 @@ This repository is a collection of reusable agent/development harness examples a
 
 ## Current examples
 
-- `basic-harness/` — basic Python harness template intended to be copied and adapted by consuming projects.
+- `basic-harness/` — basic harness template intended to be copied and adapted by consuming projects.
+  See `basic-harness/README.md` for the detailed explanation of its flow,
+  verification phases, and adaptation policy.
 
 ## Directory overview
 
 - `README.md` — repository-level index and usage notes for available harness examples.
 - `basic-harness/` — the current example/template.
+  - `basic-harness/README.md` — repository documentation for understanding this
+    example; it is not a required template artifact to copy into consuming
+    projects.
   - `basic-harness/AGENTS.md` — workflow/rules template (includes intentional placeholders such as `[One-sentence project purpose]`).
   - `basic-harness/ARCHITECTURE.md` — architecture template for consumers to fill in.
   - `basic-harness/docs/README.md` — docs index template for human-readable project docs.
-  - `basic-harness/init.sh` — local verification script for the harness (run from inside `basic-harness/`).
+  - `basic-harness/init.sh` — local verification script for the harness (run from inside `basic-harness/`). Details are documented in `basic-harness/README.md`.
   - `basic-harness/.agents/harness/feature_list.json` — sample, replaceable feature list entry.
   - `basic-harness/.agents/harness/progress/PROGRESS.md` — progress tracking template.
 
@@ -24,7 +29,9 @@ cd basic-harness
 ./init.sh
 ```
 
-In the basic template, a missing `tests/` directory is currently treated as a non-blocking warning.
+In this repository's example, `basic-harness/` has no `pyproject.toml`, so
+Python project tooling is skipped with warnings. See `basic-harness/README.md`
+for the full policy.
 
 ## Template usage guidance
 
@@ -37,6 +44,9 @@ In the basic template, a missing `tests/` directory is currently treated as a no
 - Keep these files updated during execution:
   - `.agents/harness/feature_list.json`
   - `.agents/harness/progress/PROGRESS.md`
+
+For details about the basic harness lifecycle, required artifacts, verification
+phases, and Python tooling behavior, read `basic-harness/README.md`.
 
 ## Adding future harness examples
 
