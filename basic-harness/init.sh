@@ -12,23 +12,82 @@ GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 NC='\033[0m'
 
+VERBOSE=0
+for arg in "$@"; do
+  case "$arg" in
+    --verbose|-v)
+      VERBOSE=1
+      ;;
+  esac
+done
+
 ok()    { printf "${GREEN}[OK]${NC}    %s\n" "$1"; }
 warn()  { printf "${YELLOW}[WARN]${NC}  %s\n" "$1"; }
 fail()  { printf "${RED}[FAIL]${NC}  %s\n" "$1"; }
+
+run_step() {
+  # Usage: run_step "human-readable failure message" <command...>
+  local failure_message="$1"
+  shift
+  local output_file
+  output_file=$(mktemp)
+
+  if [ "$VERBOSE" -eq 1 ]; then
+    "$@"
+    local status=$?
+    rm -f "$output_file"
+    return $status
+  fi
+
+  "$@" >"$output_file" 2>&1
+  local status=$?
+  if [ $status -ne 0 ]; then
+    fail "$failure_message"
+    printf '%s\n' "---- command output (debug) ----"
+    cat "$output_file"
+    printf '%s\n' "---- end command output ----"
+  fi
+  rm -f "$output_file"
+  return $status
+}
 
 EXIT_CODE=0
 
 echo "── 1. Verificando entorno ─────────────────────────────"
 
-# Python disponible
-if ! command -v python3 >/dev/null 2>&1; then
-  fail "python3 no está instalado"
+# uv disponible
+if ! command -v uv >/dev/null 2>&1; then
+  fail "uv no está instalado"
   exit 1
 fi
-ok "python3 -> $(python3 --version)"
+ok "uv -> $(uv --version)"
+
+# Sincronizar dependencias con uv
+if ! run_step "uv sync falló" uv sync --all-groups --all-extras; then
+  fail "uv sync falló"
+  exit 1
+fi
+ok "Dependencias sincronizadas con uv"
+
+# Activar entorno virtual del proyecto
+if [ ! -f ".venv/bin/activate" ]; then
+  fail "No existe .venv/bin/activate después de uv sync"
+  exit 1
+fi
+
+# shellcheck disable=SC1091
+source .venv/bin/activate
+ok "Entorno virtual .venv activado"
+
+# Python disponible en el entorno virtual
+if ! command -v python >/dev/null 2>&1; then
+  fail "python no está disponible en el entorno virtual"
+  exit 1
+fi
+ok "python -> $(python --version)"
 
 # Versión mínima 3.9 (dataclasses + typing moderno)
-PY_VERSION_OK=$(python3 -c 'import sys; print(int(sys.version_info >= (3, 9)))')
+PY_VERSION_OK=$(python -c 'import sys; print(int(sys.version_info >= (3, 9)))')
 if [ "$PY_VERSION_OK" != "1" ]; then
   fail "Se requiere Python >= 3.9"
   exit 1
@@ -50,7 +109,7 @@ done
 echo ""
 echo "── 3. Validando feature_list.json ──────────────────────"
 
-python3 - <<'PY'
+python - <<'PY'
 import json, re, sys
 
 
@@ -114,7 +173,13 @@ echo ""
 echo "── 4. Ejecutando tests ─────────────────────────────────"
 
 if [ -d "tests" ]; then
-  if python3 -m unittest discover -s tests -v 2>&1; then
+  if [ "$VERBOSE" -eq 1 ]; then
+    TEST_CMD=(pytest -v -rA --tb=short tests/test_*.py)
+  else
+    TEST_CMD=(pytest -q -r fE --tb=short --disable-warnings --log-cli-level=ERROR tests/test_*.py)
+  fi
+
+  if run_step "Hay tests rotos" "${TEST_CMD[@]}"; then
     ok "Todos los tests pasan"
   else
     fail "Hay tests rotos"
