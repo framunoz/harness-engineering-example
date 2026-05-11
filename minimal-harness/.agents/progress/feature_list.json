@@ -1,0 +1,12 @@
+{
+  "features": [
+    {
+      "id": "feat-001",
+      "name": "Replace sample feature",
+      "description": "Template placeholder feature for harness consumers. Replace this entry with your first real project feature before starting implementation.",
+      "dependencies": [],
+      "status": "pending",
+      "evidence": "Evidence description"
+    }
+  ]
+}

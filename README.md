@@ -4,14 +4,17 @@ This repository is a collection of reusable agent/development harness examples a
 
 ## Current examples
 
-- `progressive-harness/` — progressive harness template intended to be copied and adapted by consuming projects.
-  See `progressive-harness/README.md` for the detailed explanation of its flow,
-  verification phases, and adaptation policy.
+- `minimal-harness/` — minimal starter harness with only core files and lightweight validation.
+- `progressive-harness/` — fuller harness with additional workflow scaffolding and stricter process structure.
 
 ## Directory overview
 
 - `README.md` — repository-level index and usage notes for available harness examples.
-- `progressive-harness/` — the current example/template.
+- `minimal-harness/` — minimal example/template.
+  - `minimal-harness/README.md` — explains the minimal philosophy and usage.
+  - `minimal-harness/init.sh` — lightweight validation script.
+  - `minimal-harness/.agents/progress/*` — current state, feature list, and history.
+- `progressive-harness/` — extended example/template.
   - `progressive-harness/README.md` — repository documentation for understanding this
     example; it is not a required template artifact to copy into consuming
     projects.
@@ -22,6 +25,13 @@ This repository is a collection of reusable agent/development harness examples a
   - `progressive-harness/.agents/progress/feature_list.json` — sample, replaceable feature list entry.
   - `progressive-harness/.agents/progress/CURRENT.md` — live mutable current state.
   - `progressive-harness/.agents/progress/HISTORY.md` — compact append-only session index.
+
+## Try / verify the minimal harness
+
+```bash
+cd minimal-harness
+./init.sh
+```
 
 ## Try / verify the progressive harness
 
@@ -36,18 +46,23 @@ for the full policy.
 
 ## Template usage guidance
 
-- Copy `progressive-harness/` into your project, or use it as a starting point while bootstrapping.
-- Replace intentional placeholders in:
-  - `AGENTS.md`
-  - `ARCHITECTURE.md`
-  - docs files (for example under `docs/`)
-  - sample feature content in `.agents/progress/feature_list.json`
+- Choose a starting point based on complexity:
+  - `minimal-harness/` for simple projects and low process overhead.
+  - `progressive-harness/` for projects needing richer workflow artifacts.
+- Minimal harness (`minimal-harness/`):
+  - Replace placeholders in `AGENTS.md` and `ARCHITECTURE.md`.
+  - Replace sample feature content in `.agents/progress/feature_list.json`.
+  - No docs folder is required by default.
+- Progressive harness (`progressive-harness/`):
+  - Replace placeholders in `AGENTS.md` and `ARCHITECTURE.md`.
+  - Replace docs templates under `docs/`.
+  - Replace sample feature content in `.agents/progress/feature_list.json`.
 - Keep these files updated during execution:
   - `.agents/progress/feature_list.json`
   - `.agents/progress/CURRENT.md`
   - `.agents/progress/HISTORY.md`
 
-For details about the basic harness lifecycle, required artifacts, verification
+For details about the progressive harness lifecycle, required artifacts, verification
 phases, and Python tooling behavior, read `progressive-harness/README.md`.
 
 ## Adding future harness examples
