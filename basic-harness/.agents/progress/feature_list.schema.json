@@ -31,12 +31,7 @@
           },
           "status": {
             "type": "string",
-            "enum": [
-              "pending",
-              "in_progress",
-              "blocked",
-              "done"
-            ],
+            "enum": ["pending", "in_progress", "blocked", "done"],
             "description": "Current implementation state"
           },
           "evidence": {
@@ -44,16 +39,9 @@
             "description": "Verification evidence when status is 'done'"
           }
         },
-        "required": [
-          "id",
-          "name",
-          "description",
-          "status"
-        ]
+        "required": ["id", "name", "description", "status"]
       }
     }
   },
-  "required": [
-    "features"
-  ]
+  "required": ["features"]
 }

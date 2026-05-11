@@ -29,4 +29,4 @@ Only add documents that are needed; avoid placeholder files with no useful conte
 
 - Keep this index accurate.
 - When project changes affect behavior, setup, architecture, operations, decisions, or testing expectations, update relevant docs under `docs/`.
-- If no documentation update is needed for a change, record that decision in `.agents/harness/progress/PROGRESS.md`.
+- If no documentation update is needed for a change, record that decision in `.agents/progress/CURRENT.md` or the active session log under `.agents/LOGS/sessions/`.

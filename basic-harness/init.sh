@@ -62,9 +62,31 @@ HARNESS_BASE_FILES=(
   AGENTS.md
   ARCHITECTURE.md
   init.sh
-  .agents/harness/feature_list.json
-  .agents/harness/feature_list.schema.json
-  .agents/harness/progress/PROGRESS.md
+  .agents/progress/feature_list.json
+  .agents/progress/feature_list.schema.json
+  .agents/progress/CURRENT.md
+  .agents/progress/HISTORY.md
+  .agents/rules/00-startup.md
+  .agents/rules/01-working.md
+  .agents/rules/02-done.md
+  .agents/rules/03-end-of-session.md
+  .agents/rules/04-escalation.md
+  .agents/MEMORY/DECISIONS.md
+  .agents/MEMORY/USER.md
+  .agents/MEMORY/PATTERNS.md
+  .agents/templates/current.md
+  .agents/templates/history-entry.md
+  .agents/templates/session-log.md
+  .agents/templates/agent-log.md
+  .agents/templates/decision.md
+  .agents/templates/user.md
+  .agents/templates/pattern.md
+  .agents/templates/handoff.md
+)
+
+HARNESS_BASE_DIRS=(
+  .agents/LOGS/sessions
+  .agents/LOGS/agents
 )
 
 # El path '.' puede ajustarse según cada proyecto, porque cada proyecto es distinto.
@@ -139,6 +161,19 @@ if [ "$MISSING_BASE_FILES" -eq 0 ]; then
   ok "Todos los archivos base del arnés existen; podemos continuar."
 fi
 
+MISSING_BASE_DIRS=0
+for d in "${HARNESS_BASE_DIRS[@]}"; do
+  if [ ! -d "$d" ]; then
+    fail "Falta directorio base: $d"
+    EXIT_CODE=1
+    MISSING_BASE_DIRS=1
+  fi
+done
+
+if [ "$MISSING_BASE_DIRS" -eq 0 ]; then
+  ok "Todos los directorios base del arnés existen; podemos continuar."
+fi
+
 echo ""
 echo "── 3. Validando feature_list.json ──────────────────────"
 
@@ -186,8 +221,8 @@ def validate_schema(value, schema, path="$"):
 
 
 try:
-    data = json.load(open(".agents/harness/feature_list.json"))
-    schema = json.load(open(".agents/harness/feature_list.schema.json"))
+    data = json.load(open(".agents/progress/feature_list.json"))
+    schema = json.load(open(".agents/progress/feature_list.schema.json"))
     validate_schema(data, schema)
 
     in_progress = [f for f in data["features"] if f["status"] == "in_progress"]
@@ -195,15 +230,16 @@ try:
         print(f"[FAIL]  Hay {len(in_progress)} features en in_progress (máximo 1)")
         sys.exit(1)
 
-    print(f"[OK]    .agents/harness/feature_list.json válido contra .agents/harness/feature_list.schema.json ({len(data['features'])} features)")
+    print(f"[OK]    .agents/progress/feature_list.json válido contra .agents/progress/feature_list.schema.json ({len(data['features'])} features)")
 except Exception as e:
-    print(f"[FAIL]  .agents/harness/feature_list.json inválido: {e}")
+    print(f"[FAIL]  .agents/progress/feature_list.json inválido: {e}")
     sys.exit(1)
 PY
 
   if [ $? -ne 0 ]; then EXIT_CODE=1; fi
 else
-  warn "Python no está disponible; se omite validación de feature_list.json."
+  fail "Python no está disponible; no se puede validar .agents/progress/feature_list.json (invariante obligatoria)."
+  EXIT_CODE=1
 fi
 
 echo ""

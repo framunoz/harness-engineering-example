@@ -19,8 +19,9 @@ This repository is a collection of reusable agent/development harness examples a
   - `basic-harness/ARCHITECTURE.md` — architecture template for consumers to fill in.
   - `basic-harness/docs/README.md` — docs index template for human-readable project docs.
   - `basic-harness/init.sh` — local verification script for the harness (run from inside `basic-harness/`). Details are documented in `basic-harness/README.md`.
-  - `basic-harness/.agents/harness/feature_list.json` — sample, replaceable feature list entry.
-  - `basic-harness/.agents/harness/progress/PROGRESS.md` — progress tracking template.
+  - `basic-harness/.agents/progress/feature_list.json` — sample, replaceable feature list entry.
+  - `basic-harness/.agents/progress/CURRENT.md` — live mutable current state.
+  - `basic-harness/.agents/progress/HISTORY.md` — compact append-only session index.
 
 ## Try / verify the basic harness
 
@@ -40,10 +41,11 @@ for the full policy.
   - `AGENTS.md`
   - `ARCHITECTURE.md`
   - docs files (for example under `docs/`)
-  - sample feature content in `.agents/harness/feature_list.json`
+  - sample feature content in `.agents/progress/feature_list.json`
 - Keep these files updated during execution:
-  - `.agents/harness/feature_list.json`
-  - `.agents/harness/progress/PROGRESS.md`
+  - `.agents/progress/feature_list.json`
+  - `.agents/progress/CURRENT.md`
+  - `.agents/progress/HISTORY.md`
 
 For details about the basic harness lifecycle, required artifacts, verification
 phases, and Python tooling behavior, read `basic-harness/README.md`.

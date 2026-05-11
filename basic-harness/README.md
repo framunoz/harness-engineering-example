@@ -5,23 +5,28 @@ repository documentation, not part of the harness template that a consuming
 project is expected to copy verbatim.
 
 The goal of this harness is to give an agent a small, repeatable operating
-environment: startup rules, architecture context, feature state, progress notes,
-and a single verification command.
+environment: startup rules, architecture context, feature state, live progress,
+session history, durable memory, and a single verification command.
 
 ## What belongs to the template
 
 These files are the core template artifacts intended to be copied or adapted by
 a consuming project:
 
-- `AGENTS.md` — agent workflow, startup sequence, working rules, and definition
-  of done.
+- `AGENTS.md` — lightweight router that points to startup basics and phase-specific rules.
 - `ARCHITECTURE.md` — architecture map template that the consuming project must
   fill in.
 - `init.sh` — standard startup and verification script.
-- `.agents/harness/feature_list.json` — source of truth for feature state.
-- `.agents/harness/feature_list.schema.json` — schema used by `init.sh` to
-  validate the feature list.
-- `.agents/harness/progress/PROGRESS.md` — session continuity and progress log.
+- `.agents/progress/feature_list.json` — source of truth for feature state.
+- `.agents/progress/feature_list.schema.json` — schema used by `init.sh` to
+   validate the feature list.
+- `.agents/progress/CURRENT.md` — live mutable current state.
+- `.agents/progress/HISTORY.md` — compact append-only session index.
+- `.agents/rules/*.md` — phase-specific workflow rules.
+- `.agents/LOGS/sessions/*.md` — full session evidence and details.
+- `.agents/LOGS/agents/<agent-name>/*.md` — specialist/subagent artifacts.
+- `.agents/MEMORY/*.md` — durable cross-session decisions/preferences/patterns.
+- `.agents/templates/*.md` — reference formats for progress, logs, memory records, and handoffs.
 - `docs/README.md` — documentation index template for the consuming project.
 
 This file, `basic-harness/README.md`, explains the example for this repository
@@ -32,11 +37,12 @@ and should not be treated as a required copied artifact.
 The intended agent flow is defined in `AGENTS.md`:
 
 1. Confirm the working directory.
-2. Read `AGENTS.md`.
+2. Read `AGENTS.md` (router).
 3. Read `ARCHITECTURE.md`.
-4. Run `./init.sh`.
-5. Read `.agents/harness/feature_list.json`.
-6. Optionally review recent commits.
+4. Read `.agents/progress/CURRENT.md`.
+5. Read `.agents/progress/feature_list.json`.
+6. Run `./init.sh`.
+7. Optionally review recent commits.
 
 The important principle is that `./init.sh` is the restartability check. A new
 session should be able to run it before doing work, and a completed session
@@ -52,8 +58,8 @@ should leave the project in a state where the next session can run it again.
    all are present, it prints a single success message; if any are missing, it
    lists each missing file explicitly.
 3. **Feature list validation** — validates
-   `.agents/harness/feature_list.json` against
-   `.agents/harness/feature_list.schema.json` and ensures at most one feature is
+   `.agents/progress/feature_list.json` against
+   `.agents/progress/feature_list.schema.json` and ensures at most one feature is
    `in_progress`.
 4. **Formatting** — runs Black when the project has `pyproject.toml`.
 5. **Linting** — runs Ruff when the project has `pyproject.toml`.
@@ -106,24 +112,24 @@ operator can see all available failures.
 
 ## Feature tracking model
 
-The harness uses `.agents/harness/feature_list.json` as the current feature
+The harness uses `.agents/progress/feature_list.json` as the current feature
 state. The schema enforces structure, and `init.sh` adds one workflow rule: at
 most one feature can be `in_progress` at a time.
 
-`.agents/harness/progress/PROGRESS.md` complements the feature list with
-session-level notes: what changed, what was verified, what remains risky, and
-what the next session should know.
+`.agents/progress/CURRENT.md` holds live mutable state for the active session.
+`.agents/progress/HISTORY.md` is a compact append-only index that links to full
+session logs under `.agents/LOGS/sessions/`.
 
 ## Adapting the harness
 
 When copying this harness into a real project:
 
 1. Replace placeholders in `AGENTS.md` and `ARCHITECTURE.md`.
-2. Replace sample feature data in `.agents/harness/feature_list.json`.
+2. Replace sample feature data in `.agents/progress/feature_list.json`.
 3. Decide whether the project uses Python tooling. If it does, add a
    `pyproject.toml` with the required dev tools.
 4. Adjust quality command paths in `init.sh` if `.` is too broad or too narrow.
-5. Keep `docs/README.md`, the feature list, and progress log updated as work
+5. Keep `docs/README.md`, the feature list, CURRENT/HISTORY files, and logs updated as work
    evolves.
 
 ## Local verification
