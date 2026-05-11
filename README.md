@@ -7,17 +7,50 @@ This repository is a collection of reusable agent/development harness examples a
 - `minimal-harness/` — minimal starter harness with only core files and lightweight validation.
 - `progressive-harness/` — fuller harness with additional workflow scaffolding and stricter process structure.
 
+## CLI install and usage
+
+Install from GitHub with `uv`:
+
+```bash
+uv tool install git+https://github.com/framunoz/harness-engineering-example.git@<tag>
+```
+
+Install locally for development:
+
+```bash
+uv tool install -e .
+```
+
+Basic commands:
+
+```bash
+harness list
+harness version
+harness install minimal
+harness install progressive
+harness install minimal ./my-project
+harness install progressive ../target-dir
+harness install minimal --dry-run
+harness install progressive ./my-project --force --backup
+```
+
+`harness install` copies bundled template assets only.
+
+- `minimal-harness/README.md` and `progressive-harness/README.md` are repository-only
+  visual/reference documentation.
+- They are excluded from the CLI-installed harness payload.
+- They are not operational required files in installed consuming repositories.
+
 ## Directory overview
 
 - `README.md` — repository-level index and usage notes for available harness examples.
 - `minimal-harness/` — minimal example/template.
-  - `minimal-harness/README.md` — explains the minimal philosophy and usage.
+  - `minimal-harness/README.md` — repository-only reference doc (excluded from CLI install; not part of installed harness payload).
   - `minimal-harness/init.sh` — lightweight validation script.
   - `minimal-harness/.agents/progress/*` — current state, feature list, and history.
 - `progressive-harness/` — extended example/template.
   - `progressive-harness/README.md` — repository documentation for understanding this
-    example; it is not a required template artifact to copy into consuming
-    projects.
+    example; excluded from CLI install and not part of installed harness payload.
   - `progressive-harness/AGENTS.md` — workflow/rules template (includes intentional placeholders such as `[One-sentence project purpose]`).
   - `progressive-harness/ARCHITECTURE.md` — architecture template for consumers to fill in.
   - `progressive-harness/docs/README.md` — docs index template for human-readable project docs.

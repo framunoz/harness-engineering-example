@@ -1,0 +1,55 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "harness-cli"
+version = "0.1.0"
+description = "CLI installer for minimal and progressive harness templates"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "rich>=13.7.0",
+  "typer>=0.12.0",
+]
+
+[project.scripts]
+harness = "harness_cli.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/harness_cli"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"minimal-harness/AGENTS.md" = "src/harness_cli/templates/minimal/AGENTS.md"
+"minimal-harness/ARCHITECTURE.md" = "src/harness_cli/templates/minimal/ARCHITECTURE.md"
+"minimal-harness/init.sh" = "src/harness_cli/templates/minimal/init.sh"
+"minimal-harness/.agents/progress/CURRENT.md" = "src/harness_cli/templates/minimal/.agents/progress/CURRENT.md"
+"minimal-harness/.agents/progress/HISTORY.md" = "src/harness_cli/templates/minimal/.agents/progress/HISTORY.md"
+"minimal-harness/.agents/progress/feature_list.json" = "src/harness_cli/templates/minimal/.agents/progress/feature_list.json"
+
+"progressive-harness/AGENTS.md" = "src/harness_cli/templates/progressive/AGENTS.md"
+"progressive-harness/ARCHITECTURE.md" = "src/harness_cli/templates/progressive/ARCHITECTURE.md"
+"progressive-harness/init.sh" = "src/harness_cli/templates/progressive/init.sh"
+"progressive-harness/docs/README.md" = "src/harness_cli/templates/progressive/docs/README.md"
+"progressive-harness/.agents/progress/CURRENT.md" = "src/harness_cli/templates/progressive/.agents/progress/CURRENT.md"
+"progressive-harness/.agents/progress/HISTORY.md" = "src/harness_cli/templates/progressive/.agents/progress/HISTORY.md"
+"progressive-harness/.agents/progress/feature_list.json" = "src/harness_cli/templates/progressive/.agents/progress/feature_list.json"
+"progressive-harness/.agents/progress/feature_list.schema.json" = "src/harness_cli/templates/progressive/.agents/progress/feature_list.schema.json"
+"progressive-harness/.agents/rules/00-startup.md" = "src/harness_cli/templates/progressive/.agents/rules/00-startup.md"
+"progressive-harness/.agents/rules/01-working.md" = "src/harness_cli/templates/progressive/.agents/rules/01-working.md"
+"progressive-harness/.agents/rules/02-done.md" = "src/harness_cli/templates/progressive/.agents/rules/02-done.md"
+"progressive-harness/.agents/rules/03-end-of-session.md" = "src/harness_cli/templates/progressive/.agents/rules/03-end-of-session.md"
+"progressive-harness/.agents/rules/04-escalation.md" = "src/harness_cli/templates/progressive/.agents/rules/04-escalation.md"
+"progressive-harness/.agents/templates/agent-log.md" = "src/harness_cli/templates/progressive/.agents/templates/agent-log.md"
+"progressive-harness/.agents/templates/current.md" = "src/harness_cli/templates/progressive/.agents/templates/current.md"
+"progressive-harness/.agents/templates/decision.md" = "src/harness_cli/templates/progressive/.agents/templates/decision.md"
+"progressive-harness/.agents/templates/handoff.md" = "src/harness_cli/templates/progressive/.agents/templates/handoff.md"
+"progressive-harness/.agents/templates/history-entry.md" = "src/harness_cli/templates/progressive/.agents/templates/history-entry.md"
+"progressive-harness/.agents/templates/pattern.md" = "src/harness_cli/templates/progressive/.agents/templates/pattern.md"
+"progressive-harness/.agents/templates/session-log.md" = "src/harness_cli/templates/progressive/.agents/templates/session-log.md"
+"progressive-harness/.agents/templates/user.md" = "src/harness_cli/templates/progressive/.agents/templates/user.md"
+"progressive-harness/.agents/MEMORY/DECISIONS.md" = "src/harness_cli/templates/progressive/.agents/MEMORY/DECISIONS.md"
+"progressive-harness/.agents/MEMORY/PATTERNS.md" = "src/harness_cli/templates/progressive/.agents/MEMORY/PATTERNS.md"
+"progressive-harness/.agents/MEMORY/USER.md" = "src/harness_cli/templates/progressive/.agents/MEMORY/USER.md"
+"progressive-harness/.agents/LOGS/sessions/.gitkeep" = "src/harness_cli/templates/progressive/.agents/LOGS/sessions/.gitkeep"
+"progressive-harness/.agents/LOGS/agents/.gitkeep" = "src/harness_cli/templates/progressive/.agents/LOGS/agents/.gitkeep"

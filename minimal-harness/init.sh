@@ -17,7 +17,6 @@ PYTHON_CMD=""
 REQUIRED_FILES=(
   "AGENTS.md"
   "ARCHITECTURE.md"
-  "README.md"
   "init.sh"
   ".agents/progress/feature_list.json"
   ".agents/progress/CURRENT.md"

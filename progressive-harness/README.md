@@ -2,7 +2,9 @@
 
 This README documents the `progressive-harness/` example in this repository. It is
 repository documentation, not part of the harness template that a consuming
-project is expected to copy verbatim.
+project is expected to copy verbatim, and is not copied by the CLI installer.
+It is repository-only visual/reference documentation and is not an operational
+required file in installed consuming repositories.
 
 The goal of this harness is to give an agent a small, repeatable operating
 environment: startup rules, architecture context, feature state, live progress,

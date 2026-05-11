@@ -2,6 +2,10 @@
 
 `minimal-harness/` is a basic starter harness with low cognitive load.
 
+> This README is repository-only visual/reference documentation.
+> It is excluded from the CLI-installed harness payload.
+> The installed minimal harness validated by `init.sh` does not require this file.
+
 ## Goal
 
 Provide only the essentials an agent needs to begin and continue work:
@@ -18,7 +22,7 @@ Provide only the essentials an agent needs to begin and continue work:
 minimal-harness/
 ├── AGENTS.md
 ├── ARCHITECTURE.md
-├── README.md
+├── README.md  (repository-only, excluded from CLI install)
 ├── init.sh
 └── .agents/
     └── progress/
