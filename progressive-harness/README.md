@@ -1,6 +1,6 @@
-# Basic Harness
+# Progressive Harness
 
-This README documents the `basic-harness/` example in this repository. It is
+This README documents the `progressive-harness/` example in this repository. It is
 repository documentation, not part of the harness template that a consuming
 project is expected to copy verbatim.
 
@@ -29,7 +29,7 @@ a consuming project:
 - `.agents/templates/*.md` — reference formats for progress, logs, memory records, and handoffs.
 - `docs/README.md` — documentation index template for the consuming project.
 
-This file, `basic-harness/README.md`, explains the example for this repository
+This file, `progressive-harness/README.md`, explains the example for this repository
 and should not be treated as a required copied artifact.
 
 ## Startup flow
@@ -137,9 +137,9 @@ When copying this harness into a real project:
 From this repository:
 
 ```bash
-cd basic-harness
+cd progressive-harness
 ./init.sh
 ```
 
-In this example repository, `basic-harness/` currently has no `pyproject.toml`,
+In this example repository, `progressive-harness/` currently has no `pyproject.toml`,
 so Python project quality gates are skipped with warnings. That is expected.

@@ -1,8 +1,8 @@
-# Plan de Refactorización: Evolución de basic-harness a Context-Progressive Harness
+# Plan de Refactorización: Evolución de progressive-harness a Context-Progressive Harness
 
 ## Estado Actual
 
-`basic-harness/` es un arnés funcional pero monolítico. `AGENTS.md` acumula startup workflow, working rules, definición de done y end-of-session en un solo archivo. A medida que un proyecto crece, esto genera:
+`progressive-harness/` es un arnés funcional pero monolítico. `AGENTS.md` acumula startup workflow, working rules, definición de done y end-of-session en un solo archivo. A medida que un proyecto crece, esto genera:
 
 - **Ineficiencia de tokens**: el agente lee reglas de startup aunque ya esté en mitad de una sesión.
 - **Dificultad de mantenimiento**: un solo archivo de 70+ líneas mezcla concerns distintos.
@@ -28,7 +28,7 @@ Un arnés que implemente **Contexto Progresivo** (inspirado en [dotagents](https
 ## Estructura de Carpetas Propuesta
 
 ```
-basic-harness/
+progressive-harness/
 ├── AGENTS.md                    # Router de contexto (slim)
 ├── ARCHITECTURE.md              # Mapa del sistema (se mantiene)
 ├── init.sh                      # Verificación y arranque (se mantiene)
@@ -308,7 +308,7 @@ Esta separación toma el tradeoff observado en el repo de referencia (`current.m
 ### Fase 5: Documentación y Validación
 - [ ] Ajustar referencias en `init.sh` a las nuevas rutas (`.agents/progress/`, `CURRENT.md`, `HISTORY.md`, `LOGS/`).
 - [ ] Actualizar `docs/README.md` para reflejar la nueva estructura.
-- [ ] Actualizar `basic-harness/README.md` (el README del ejemplo) para explicar la filosofía de contexto progresivo.
+- [ ] Actualizar `progressive-harness/README.md` (el README del ejemplo) para explicar la filosofía de contexto progresivo.
 - [ ] Ejecutar `./init.sh` y confirmar que pasa todas las fases.
 - [ ] Revisión final de consistencia entre todos los archivos.
 
